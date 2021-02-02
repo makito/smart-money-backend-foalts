@@ -14,8 +14,3 @@ export class Wallet extends BaseEntity {
   amount: number;
 
 }
-
-export interface IWallet {
-  name: string;
-  amount: number;
-}

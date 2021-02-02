@@ -9,11 +9,12 @@ import {
   HttpResponseOK,
   Post,
   Put,
-  ValidateBody,
   ValidatePathParam
 } from '@foal/core';
+import { ValidateBody } from '@foal/typestack';
 
-import { Wallet, IWallet } from '../entities/wallet.entity';
+import { Wallet } from '../entities';
+import { CreateWalletDto, UpdateWalletDto } from '../entities/dto';
 import { WalletsService } from '../services';
 
 export class WalletsController {
@@ -51,16 +52,8 @@ export class WalletsController {
    * @param body request body
    */
   @Post('/')
-  @ValidateBody({
-    additionalProperties: false,
-    properties: {
-      name: { type: 'string' },
-      amount: { type: 'number' }
-    },
-    required: [ 'name' ],
-    type: 'object',
-  })
-  async create(ctx: Context, params: any, body: IWallet) {
+  @ValidateBody(CreateWalletDto)
+  async create(ctx: Context, params: any, body: CreateWalletDto) {
     const wallet = await this.walletsService.createWallet(body);
     return new HttpResponseCreated(wallet);
   }
@@ -73,16 +66,8 @@ export class WalletsController {
    */
   @Put('/:id')
   @ValidatePathParam('id', { type: 'number' })
-  @ValidateBody({
-    additionalProperties: false,
-    properties: {
-      name: { type: 'string' },
-      amount: { type: 'number' }
-    },
-    required: [],
-    type: 'object',
-  })
-  async update(ctx: Context, { id }, body: IWallet) {
+  @ValidateBody(UpdateWalletDto)
+  async update(ctx: Context, { id }, body: UpdateWalletDto) {
     const wallet = await this.walletsService.updateWallet(id, body);
     return new HttpResponseOK(wallet);
   }

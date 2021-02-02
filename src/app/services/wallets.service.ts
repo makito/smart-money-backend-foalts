@@ -1,4 +1,5 @@
-import { Wallet, IWallet } from '../entities/wallet.entity';
+import { Wallet } from '../entities';
+import { CreateWalletDto, UpdateWalletDto } from '../entities/dto';
 
 export class WalletsService {
 
@@ -6,7 +7,7 @@ export class WalletsService {
    * create wallet from body data
    * @param param0 wallet model
    */
-  async createWallet({ name, amount }: IWallet) {
+  async createWallet({ name, amount }: CreateWalletDto) {
     const wallet = new Wallet();
 
     wallet.name = name;
@@ -20,7 +21,7 @@ export class WalletsService {
    * @param id wallet id
    * @param param1 wallet model
    */
-  async updateWallet(id: number, { name, amount }: IWallet) {
+  async updateWallet(id: number, { name, amount }: UpdateWalletDto) {
     const wallet = new Wallet();
 
     if (name) {
