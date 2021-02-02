@@ -31,8 +31,8 @@ export class WalletsController {
    */
   @Get('/:id')
   @ValidatePathParam('id', { type: 'number' })
-  async getOne(ctx: Context) {
-    const wallet = await Wallet.findOne({ id: ctx.request.params.id });
+  async getOne(ctx: Context, { id }) {
+    const wallet = await Wallet.findOne({ id });
 
     return !wallet ?
       new HttpResponseNotFound() :
@@ -53,11 +53,11 @@ export class WalletsController {
     required: [ 'name' ],
     type: 'object',
   })
-  async create(ctx: Context) {
+  async create(ctx: Context, params: any, { name, amount }) {
     const wallet = new Wallet();
 
-    wallet.name = ctx.request.body.name;
-    wallet.amount = ctx.request.body.amount;
+    wallet.name = name;
+    wallet.amount = amount;
 
     await wallet.save();
 
@@ -79,17 +79,17 @@ export class WalletsController {
     required: [],
     type: 'object',
   })
-  async update(ctx: Context) {
+  async update(ctx: Context, { id }, { name, amount }) {
     const wallet = new Wallet();
 
-    if (ctx.request.body.name) {
-      wallet.name = ctx.request.body.name;
+    if (name) {
+      wallet.name = name;
     }
-    if (ctx.request.body.amount !== undefined) {
-      wallet.amount = ctx.request.body.amount;
+    if (amount !== undefined) {
+      wallet.amount = amount;
     }
 
-    await Wallet.update(ctx.request.params.id, wallet);
+    await Wallet.update(id, wallet);
 
     return new HttpResponseOK(wallet);
   }
@@ -100,8 +100,8 @@ export class WalletsController {
    */
   @Delete('/:id')
   @ValidatePathParam('id', { type: 'number' })
-  async remove(ctx: Context) {
-    const wallet = await Wallet.findOne({ id: ctx.request.params.id });
+  async remove(ctx: Context, { id }) {
+    const wallet = await Wallet.findOne({ id });
 
     if (!wallet) {
       return new HttpResponseNotFound();
