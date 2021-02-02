@@ -1,7 +1,6 @@
 import {
   Context,
   Delete,
-  dependency,
   Get,
   HttpResponseCreated,
   HttpResponseNoContent,
@@ -14,12 +13,8 @@ import {
 import { ValidateBody } from '@foal/typestack';
 
 import { Wallet } from '../entities';
-import { CreateWalletDto, UpdateWalletDto } from '../entities/dto';
-import { WalletsService } from '../services';
 
 export class WalletsController {
-  @dependency
-  walletsService: WalletsService;
 
   /**
    * get all wallets
@@ -52,10 +47,9 @@ export class WalletsController {
    * @param body request body
    */
   @Post('/')
-  @ValidateBody(CreateWalletDto)
-  async create(ctx: Context, params: any, body: CreateWalletDto) {
-    const wallet = await this.walletsService.createWallet(body);
-    return new HttpResponseCreated(wallet);
+  @ValidateBody(Wallet)
+  async create(ctx: Context, params: any, wallet: Wallet) {
+    return new HttpResponseCreated(await wallet.save());
   }
 
   /**
@@ -66,10 +60,9 @@ export class WalletsController {
    */
   @Put('/:id')
   @ValidatePathParam('id', { type: 'number' })
-  @ValidateBody(UpdateWalletDto)
-  async update(ctx: Context, { id }, body: UpdateWalletDto) {
-    const wallet = await this.walletsService.updateWallet(id, body);
-    return new HttpResponseOK(wallet);
+  @ValidateBody(Wallet)
+  async update(ctx: Context, { id }, wallet: Wallet) {
+    return new HttpResponseOK(await Wallet.update(id, wallet));
   }
 
   /**
