@@ -1,6 +1,6 @@
 {
   "database": {
-    "database": "./test_db.sqlite3",
+    "database": "env(DATABASE_FOR_TESTS_NAME)",
     "dropSchema": true,
     "synchronize": true
   }
