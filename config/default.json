@@ -6,7 +6,11 @@
     }
   },
   "database": {
-    "type": "sqlite",
-    "database": "./db.sqlite3"
+    "type": "mariadb",
+    "database": "env(DATABASE_NAME)",
+    "host": "env(DATABASE_HOST)",
+    "port": 3306,
+    "username": "env(DATABASE_USER_NAME)",
+    "password": "env(DATABASE_PASSWORD)"
   }
 }
