@@ -1,6 +1,7 @@
 import {
   Context,
   Delete,
+  dependency,
   Get,
   HttpResponseCreated,
   HttpResponseNoContent,
@@ -12,9 +13,12 @@ import {
   ValidatePathParam
 } from '@foal/core';
 
-import { Wallet } from '../entities';
+import { Wallet, IWallet } from '../entities/wallet.entity';
+import { WalletsService } from '../services';
 
 export class WalletsController {
+  @dependency
+  walletsService: WalletsService;
 
   /**
    * get all wallets
@@ -28,6 +32,7 @@ export class WalletsController {
   /**
    * get wallet by id
    * @param ctx context
+   * @param param1 request parameters
    */
   @Get('/:id')
   @ValidatePathParam('id', { type: 'number' })
@@ -42,6 +47,8 @@ export class WalletsController {
   /**
    * create wallet from model
    * @param ctx context
+   * @param params request parameters
+   * @param body request body
    */
   @Post('/')
   @ValidateBody({
@@ -53,20 +60,16 @@ export class WalletsController {
     required: [ 'name' ],
     type: 'object',
   })
-  async create(ctx: Context, params: any, { name, amount }) {
-    const wallet = new Wallet();
-
-    wallet.name = name;
-    wallet.amount = amount;
-
-    await wallet.save();
-
+  async create(ctx: Context, params: any, body: IWallet) {
+    const wallet = await this.walletsService.createWallet(body);
     return new HttpResponseCreated(wallet);
   }
 
   /**
-   * update wallet by id
+   * update wallet
    * @param ctx context
+   * @param param1 request parameters
+   * @param body request body
    */
   @Put('/:id')
   @ValidatePathParam('id', { type: 'number' })
@@ -79,24 +82,15 @@ export class WalletsController {
     required: [],
     type: 'object',
   })
-  async update(ctx: Context, { id }, { name, amount }) {
-    const wallet = new Wallet();
-
-    if (name) {
-      wallet.name = name;
-    }
-    if (amount !== undefined) {
-      wallet.amount = amount;
-    }
-
-    await Wallet.update(id, wallet);
-
+  async update(ctx: Context, { id }, body: IWallet) {
+    const wallet = await this.walletsService.updateWallet(id, body);
     return new HttpResponseOK(wallet);
   }
 
   /**
    * remove wallet by id
    * @param ctx context
+   * @param param1 request parameters
    */
   @Delete('/:id')
   @ValidatePathParam('id', { type: 'number' })
