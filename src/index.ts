@@ -13,7 +13,7 @@ async function main() {
   const app = await createApp(AppController);
 
   const httpServer = http.createServer(app);
-  const port = Config.get('port', 'number', 3001);
+  const port = Config.get('port', 'number', 3000);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });
