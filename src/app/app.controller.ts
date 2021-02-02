@@ -1,11 +1,11 @@
 import { controller, IAppController } from '@foal/core';
 import { createConnection } from 'typeorm';
 
-import { ApiController } from './controllers';
+import { WalletsController } from './controllers';
 
 export class AppController implements IAppController {
   subControllers = [
-    controller('/api', ApiController),
+    controller('/wallets', WalletsController),
   ];
 
   async init() {

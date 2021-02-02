@@ -1,1 +1,1 @@
-export { ApiController } from './api.controller';
+export { WalletsController } from './wallets.controller';
